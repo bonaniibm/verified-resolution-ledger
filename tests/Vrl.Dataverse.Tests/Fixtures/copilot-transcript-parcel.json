@@ -1,0 +1,297 @@
+{
+ "activities": [
+  {
+   "valueType": "ConversationInfo",
+   "type": "trace",
+   "timestamp": 1790431544,
+   "timestampMs": 1790431544000,
+   "from": {
+    "id": "",
+    "role": 0
+   },
+   "value": {
+    "lastSessionOutcome": "Abandoned",
+    "lastSessionOutcomeReason": "UserExit",
+    "isDesignMode": false,
+    "locale": ""
+   }
+  },
+  {
+   "id": "1790431544789",
+   "type": "event",
+   "timestamp": 1790431544,
+   "timestampMs": 1790431544000,
+   "from": {
+    "id": "dda4440a-3cab-53d6-be5c-90a319e4f9dd",
+    "role": 1
+   },
+   "name": "startConversation",
+   "channelId": "lcw",
+   "text": "{\"EventName\":\"startConversation\",\"msdyn_liveworkitemid\":\"11111111-2222-3333-4444-555555555555\",\"msdyn_ConversationId\":\"11111111-2222-3333-4444-555555555555\",\"msdyn_sessionid\":\"bab7d595-8bff-5b38-a0ff-9d3434b17c45\",\"msdyn_ChannelInstanceId\":\"d05ffe8f-6448-5138-bc93-c871285a9dc6\",\"msdyn_WorkstreamId\":\"51821a70-3021-5df4-9c3f-f098f1c43dac\",\"msdyn_Locale\":\"en-US\",\"msdyn_localecode\":\"en-US\",\"supportsLcwStreaming\":\"true\",\"Email\":\"customer@example.com\",\"msdyn_msdyn_ocliveworkitem_msdyn_livechatengagementctx_liveworkitemid\":[{\"RecordId\":\"35685b62-5433-51e3-a2ea-81eacbdbadb3\",\"PrimaryDisplayValue\":\"\"}],\"msdyn_browser\":\"Edge\",\"msdyn_device\":\"Desktop\",\"msdyn_os\":\"Windows\"}",
+   "attachments": [],
+   "value": {
+    "msdyn_liveworkitemid": "11111111-2222-3333-4444-555555555555",
+    "msdyn_ConversationId": "11111111-2222-3333-4444-555555555555",
+    "msdyn_sessionid": "bab7d595-8bff-5b38-a0ff-9d3434b17c45",
+    "msdyn_ChannelInstanceId": "d05ffe8f-6448-5138-bc93-c871285a9dc6",
+    "msdyn_WorkstreamId": "51821a70-3021-5df4-9c3f-f098f1c43dac",
+    "msdyn_Locale": "en-US",
+    "msdyn_localecode": "en-US",
+    "supportsLcwStreaming": "true",
+    "Email": "customer@example.com",
+    "msdyn_msdyn_ocliveworkitem_msdyn_livechatengagementctx_liveworkitemid": [
+     {
+      "RecordId": "35685b62-5433-51e3-a2ea-81eacbdbadb3",
+      "PrimaryDisplayValue": ""
+     }
+    ],
+    "msdyn_browser": "Edge",
+    "msdyn_device": "Desktop",
+    "msdyn_os": "Windows"
+   },
+   "channelData": {
+    "microsoft.azure.communication.chat.bot.contenttype": "azurebotservice.command",
+    "omnichannelBotEventData": "{\"msdyn_bothandle\":\"bpc_VRLParcelBot\",\"msdyn_owningenvironmentid\":\"16472c31-92c0-55d9-a759-5d05d4ba9832\",\"tenantid\":\"265342e4-4a36-5e80-a85c-aa810dd8d0a9\",\"msdyn_botplatform\":\"192350000\"}",
+    "tags": "ChannelId-lcw,OmnichannelContextMessage,Hidden",
+    "fromUserId": "8:acs:user",
+    "sourceChannelId": "omnichannel"
+   }
+  },
+  {
+   "id": "a81f1547-89a5-5dde-bcc4-da3b7e8584c7",
+   "type": "message",
+   "timestamp": 1790431545,
+   "timestampMs": 1790431545428,
+   "from": {
+    "id": "abf5a993-1920-5360-a2c9-2b353ffbe15d",
+    "role": 0
+   },
+   "channelId": "lcw",
+   "textFormat": "markdown",
+   "text": "Hello, I'm VRL Parcel Bot. How can I help?",
+   "attachments": [],
+   "replyToId": "1790431544789",
+   "speak": "Hello and thank you for calling VRL Parcel Bot, powered by generative AI. How may I help you today?",
+   "channelData": {
+    "feedbackLoop": {
+     "type": "default"
+    },
+    "deliveryMode": "bridged"
+   }
+  },
+  {
+   "id": "1790431553986",
+   "type": "event",
+   "timestamp": 1790431553,
+   "timestampMs": 1790431553000,
+   "from": {
+    "id": "dda4440a-3cab-53d6-be5c-90a319e4f9dd",
+    "role": 1
+   },
+   "name": "channel/vnd.microsoft.setcontext",
+   "channelId": "lcw",
+   "text": "{\"EventName\":\"channel/vnd.microsoft.setcontext\",\"msdyn_liveworkitemid\":\"11111111-2222-3333-4444-555555555555\",\"msdyn_ConversationId\":\"11111111-2222-3333-4444-555555555555\",\"msdyn_sessionid\":\"bab7d595-8bff-5b38-a0ff-9d3434b17c45\",\"msdyn_msdyn_ocliveworkitem_msdyn_livechatengagementctx_liveworkitemid\":[{\"RecordId\":\"fa1ce1f9-0c71-5e41-b657-1ab5ff0e1a54\",\"PrimaryDisplayValue\":\"\"}],\"msdyn_ChannelInstanceId\":\"d05ffe8f-6448-5138-bc93-c871285a9dc6\",\"msdyn_WorkstreamId\":\"51821a70-3021-5df4-9c3f-f098f1c43dac\",\"msdyn_Locale\":\"en-US\",\"msdyn_localecode\":\"en-US\",\"supportsLcwStreaming\":\"true\",\"Email\":\"customer@example.com\",\"msdyn_browser\":\"Edge\",\"msdyn_device\":\"Desktop\",\"msdyn_os\":\"Windows\",\"msdyn_contact_msdyn_ocliveworkitem_Customer\":[{\"RecordId\":\"bad2b0fa-acd9-58a9-9492-b22e55f094c5\",\"PrimaryDisplayValue\":\"Test Customer A\"}],\"contact_msdyn_ocliveworkitems\":[{\"RecordId\":\"bad2b0fa-acd9-58a9-9492-b22e55f094c5\",\"PrimaryDisplayValue\":\"Test Customer A\"}],\"msdyn_CustomerType\":\"contact\",\"msdyn_CustomerId\":\"bad2b0fa-acd9-58a9-9492-b22e55f094c5\",\"msdyn_CustomerName\":\"Test Customer A\"}",
+   "attachments": [],
+   "value": {
+    "msdyn_liveworkitemid": "11111111-2222-3333-4444-555555555555",
+    "msdyn_ConversationId": "11111111-2222-3333-4444-555555555555",
+    "msdyn_sessionid": "bab7d595-8bff-5b38-a0ff-9d3434b17c45",
+    "msdyn_msdyn_ocliveworkitem_msdyn_livechatengagementctx_liveworkitemid": [
+     {
+      "RecordId": "fa1ce1f9-0c71-5e41-b657-1ab5ff0e1a54",
+      "PrimaryDisplayValue": ""
+     }
+    ],
+    "msdyn_ChannelInstanceId": "d05ffe8f-6448-5138-bc93-c871285a9dc6",
+    "msdyn_WorkstreamId": "51821a70-3021-5df4-9c3f-f098f1c43dac",
+    "msdyn_Locale": "en-US",
+    "msdyn_localecode": "en-US",
+    "supportsLcwStreaming": "true",
+    "Email": "customer@example.com",
+    "msdyn_browser": "Edge",
+    "msdyn_device": "Desktop",
+    "msdyn_os": "Windows",
+    "msdyn_contact_msdyn_ocliveworkitem_Customer": [
+     {
+      "RecordId": "bad2b0fa-acd9-58a9-9492-b22e55f094c5",
+      "PrimaryDisplayValue": "Test Customer A"
+     }
+    ],
+    "contact_msdyn_ocliveworkitems": [
+     {
+      "RecordId": "bad2b0fa-acd9-58a9-9492-b22e55f094c5",
+      "PrimaryDisplayValue": "Test Customer A"
+     }
+    ],
+    "msdyn_CustomerType": "contact",
+    "msdyn_CustomerId": "bad2b0fa-acd9-58a9-9492-b22e55f094c5",
+    "msdyn_CustomerName": "Test Customer A"
+   },
+   "channelData": {
+    "microsoft.azure.communication.chat.bot.contenttype": "azurebotservice.command",
+    "omnichannelBotEventData": "{\"msdyn_bothandle\":\"bpc_VRLParcelBot\",\"msdyn_owningenvironmentid\":\"16472c31-92c0-55d9-a759-5d05d4ba9832\",\"tenantid\":\"265342e4-4a36-5e80-a85c-aa810dd8d0a9\",\"msdyn_botplatform\":\"192350000\"}",
+    "tags": "ChannelId-lcw,OmnichannelContextMessage,Hidden",
+    "fromUserId": "8:acs:user",
+    "sourceChannelId": "omnichannel"
+   }
+  },
+  {
+   "id": "1790431560726",
+   "type": "message",
+   "timestamp": 1790431560,
+   "timestampMs": 1790431560000,
+   "from": {
+    "id": "dda4440a-3cab-53d6-be5c-90a319e4f9dd",
+    "role": 1
+   },
+   "channelId": "lcw",
+   "textFormat": "Text",
+   "text": "My parcel TRK‑55667788 shows delivered but I never received it.",
+   "attachments": [],
+   "channelData": {
+    "microsoft.azure.communication.chat.bot.contenttype": null,
+    "deliveryMode": "bridged",
+    "tags": "ChannelId-lcw,FromCustomer",
+    "widgetId": "ecc7ba46-456a-5850-88fe-db729fd75b4b",
+    "clientMessageId": "1790431559462",
+    "sourceChannelId": "omnichannel"
+   }
+  },
+  {
+   "valueType": "IntentRecognition",
+   "id": "6edcb9defd8d494faf1d4886938d7236",
+   "type": "trace",
+   "timestamp": 1790431561,
+   "timestampMs": 1790431561486,
+   "from": {
+    "id": "abf5a993-1920-5360-a2c9-2b353ffbe15d",
+    "role": 0
+   },
+   "value": {
+    "intentTitle": "Parcel not received",
+    "intentType": 1,
+    "triggerUtterance": "My parcel TRK‑55667788 shows delivered but I never received it.",
+    "normalizedTriggerUtterance": "My parcel TRK‑55667788 shows delivered but I never received it.",
+    "intentId": "1eb8eee6-4692-50df-a001-dbc901b954fc",
+    "intentScore": {
+     "score": 0.8670880794525146,
+     "properties": {
+      "Type": 1,
+      "Title": "Parcel not received"
+     }
+    }
+   }
+  },
+  {
+   "id": "9d8e322f-61cc-58a8-816c-7fcf2d9a9886",
+   "type": "message",
+   "timestamp": 1790431561,
+   "timestampMs": 1790431561484,
+   "from": {
+    "id": "abf5a993-1920-5360-a2c9-2b353ffbe15d",
+    "role": 0
+   },
+   "channelId": "lcw",
+   "textFormat": "markdown",
+   "text": "Parcels marked as delivered sometimes arrive within 48 hours. Please check with neighbours or your safe place. Is there anything else?",
+   "attachments": [],
+   "replyToId": "1790431560726",
+   "channelData": {
+    "feedbackLoop": {
+     "type": "default"
+    },
+    "deliveryMode": "bridged"
+   }
+  },
+  {
+   "id": "1790431574717",
+   "type": "message",
+   "timestamp": 1790431574,
+   "timestampMs": 1790431574000,
+   "from": {
+    "id": "dda4440a-3cab-53d6-be5c-90a319e4f9dd",
+    "role": 1
+   },
+   "channelId": "lcw",
+   "textFormat": "Text",
+   "text": "OK thanks",
+   "attachments": [],
+   "channelData": {
+    "microsoft.azure.communication.chat.bot.contenttype": null,
+    "deliveryMode": "bridged",
+    "tags": "ChannelId-lcw,FromCustomer",
+    "widgetId": "ecc7ba46-456a-5850-88fe-db729fd75b4b",
+    "clientMessageId": "1790431573632",
+    "sourceChannelId": "omnichannel"
+   }
+  },
+  {
+   "valueType": "IntentRecognition",
+   "id": "87d222e930e24f308e0509d597e1612b",
+   "type": "trace",
+   "timestamp": 1790431575,
+   "timestampMs": 1790431575125,
+   "from": {
+    "id": "abf5a993-1920-5360-a2c9-2b353ffbe15d",
+    "role": 0
+   },
+   "value": {
+    "intentTitle": "Thank you",
+    "intentType": 1,
+    "triggerUtterance": "OK thanks",
+    "normalizedTriggerUtterance": "OK thanks",
+    "intentId": "7974aaa3-a348-5142-b153-07ed1d9e74f8",
+    "intentScore": {
+     "score": 0.8886697888374329,
+     "properties": {
+      "Type": 1,
+      "Title": "Thank you"
+     }
+    }
+   }
+  },
+  {
+   "id": "200860f7-bf98-58bc-a791-7a3130254ad6",
+   "type": "message",
+   "timestamp": 1790431575,
+   "timestampMs": 1790431575123,
+   "from": {
+    "id": "abf5a993-1920-5360-a2c9-2b353ffbe15d",
+    "role": 0
+   },
+   "channelId": "lcw",
+   "textFormat": "markdown",
+   "text": "You're welcome.",
+   "attachments": [],
+   "replyToId": "1790431574717",
+   "channelData": {
+    "feedbackLoop": {
+     "type": "default"
+    },
+    "deliveryMode": "bridged"
+   }
+  },
+  {
+   "valueType": "SessionInfo",
+   "id": "0",
+   "type": "trace",
+   "timestamp": 1790431575,
+   "timestampMs": 1790431575123,
+   "from": {
+    "id": "",
+    "role": 0
+   },
+   "value": {
+    "startTimeUtc": "2026-09-26T14:05:44Z",
+    "endTimeUtc": "2026-09-26T14:06:15Z",
+    "type": "Engaged",
+    "outcome": "Abandoned",
+    "turnCount": 5,
+    "lastTriggeredIntentId": "7974aaa3-a348-5142-b153-07ed1d9e74f8",
+    "lastUserIntentId": "7974aaa3-a348-5142-b153-07ed1d9e74f8",
+    "impliedSuccess": false,
+    "outcomeReason": "UserExit"
+   }
+  }
+ ]
+}

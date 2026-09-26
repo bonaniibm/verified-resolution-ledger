@@ -1,0 +1,43 @@
+{
+  "$comment": "Copy to deploy/config.json (git-ignored) and replace every <...> value. Dataverse and Azure may be in different Entra tenants.",
+  "install": "managed",
+  "$installComment": "managed = customer environment, imports the released managed solution (recommended). source = development environment, builds schema from code (unmanaged).",
+  "solution": {
+    "zip": "",
+    "$comment": "Optional path to VerifiedResolutionLedger_<version>_managed.zip. Empty = newest file in artifacts/solution."
+  },
+  "dataverse": {
+    "url": "https://<your-org>.crm.dynamics.com",
+    "tenantId": "<entra-tenant-id-of-the-dataverse-environment>"
+  },
+  "azure": {
+    "tenantId": "<entra-tenant-id-of-the-azure-subscription>",
+    "subscriptionId": "<azure-subscription-id>",
+    "resourceGroup": "<existing-resource-group>",
+    "baseName": "vrl",
+    "functionLocation": ""
+  },
+  "openAi": {
+    "$comment": "Existing Azure OpenAI / Foundry account in the same resource group. Leave accountName empty to use the built-in local embeddings.",
+    "accountName": "<azure-openai-account-name>",
+    "deployment": "text-embedding-3-small",
+    "endpoint": ""
+  },
+  "adapter": {
+    "$comment": "Contact Center adapter. Set the same values as Function App settings Vrl__Adapter__<name> so the pipeline and CLI replays agree.",
+    "IdentifyFromSelfDeclaredEmail": true,
+    "DigitalCreditsPerBotConversation": 10,
+    "VoiceCreditsPerBotMinute": 35
+  },
+  "synthetic": {
+    "customers": 150
+  },
+  "testChat": {
+    "$comment": "Optional. From your chat widgets' code snippets (Copilot Service admin center > Channels > Chat > widget > Copy code).",
+    "orgId": "<data-org-id>",
+    "orgUrl": "https://<data-org-url>.omnichannelengagementhub.com",
+    "humanWidgetAppId": "<data-app-id of a workstream WITHOUT an AI agent>",
+    "botWidgetAppId": "<data-app-id of a workstream WITH your Copilot Studio agent>",
+    "testCustomerEmail": "testcustomer.a@example.com"
+  }
+}

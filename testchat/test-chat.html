@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>VRL Test Customer Portal</title>
+<style>
+  body { font: 15px/1.55 "Segoe UI", system-ui, sans-serif; margin: 0; background: #f5f7f9; color: #1b2430; }
+  main { max-width: 760px; margin: 0 auto; padding: 32px 20px 120px; display: grid; gap: 18px; }
+  h1 { font-size: 22px; margin: 0; }
+  .card { background: #fff; border: 1px solid #dde3e9; border-radius: 10px; padding: 18px 20px; }
+  code, .say { font-family: Consolas, monospace; background: #eef2f5; padding: 2px 6px; border-radius: 4px; }
+  .say { display: block; padding: 8px 10px; margin: 6px 0 12px; }
+  ol { margin: 6px 0 0 18px; padding: 0; }
+</style>
+</head>
+<body>
+<main>
+  <h1>Test customer portal: Verified Resolution Ledger</h1>
+  <div class="card">
+    <strong>Test A: first contact</strong>
+    <ol>
+      <li>Open the chat bubble (bottom right) and send:
+        <span class="say">Hi, my refund for order ORD-4455667 hasn't arrived yet. I returned the item two weeks ago.</span></li>
+      <li>In Copilot Service workspace: accept, reply, then set <b>Customer</b> = <i>Test Customer A</i>.</li>
+      <li>End the conversation and close the session.</li>
+    </ol>
+  </div>
+  <div class="card">
+    <strong>Test B: the repeat (5 to 10 minutes later)</strong>
+    <ol>
+      <li>Refresh this page, open a new chat and send:
+        <span class="say">Still no refund for ORD-4455667, this is the second time I'm contacting you.</span></li>
+      <li>Link the same contact, <i>Test Customer A</i>, then end and close.</li>
+      <li>Run <code>Check-Trial.cmd</code>: Test A should show <code>FailedHumanResolution</code>.</li>
+    </ol>
+  </div>
+</main>
+<script id="Microsoft_Omnichannel_LCWidget" src="https://oc-cdn-ocprod.azureedge.net/livechatwidget/scripts/LiveChatBootstrapper.js" onerror="(function(el){el.parentNode.removeChild(el);var s=document.createElement('script');s.src='https://ocprodocprodnamgs.blob.core.windows.net/livechatwidget/scripts/LiveChatBootstrapper.js';s.setAttribute('id', 'Microsoft_Omnichannel_LCWidget');s.setAttribute('data-app-id', '{{APP_ID}}');s.setAttribute('data-lcw-version', 'prod');s.setAttribute('data-org-id', '{{ORG_ID}}');s.setAttribute('data-org-url', '{{ORG_URL}}');document.body.appendChild(s);})(this);" data-app-id="{{APP_ID}}" data-lcw-version="prod" data-org-id="{{ORG_ID}}" data-org-url="{{ORG_URL}}" async></script>
+</body>
+</html>

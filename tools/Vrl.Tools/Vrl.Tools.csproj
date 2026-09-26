@@ -1,0 +1,23 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\Vrl.Core\Vrl.Core.csproj" />
+    <ProjectReference Include="..\..\src\Vrl.Dataverse\Vrl.Dataverse.csproj" />
+    <ProjectReference Include="..\..\src\Vrl.AI\Vrl.AI.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="8.0.1" />
+  </ItemGroup>
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <AssemblyName>vrl</AssemblyName>
+    <!-- Run on the newest installed runtime (e.g. .NET 10 with Visual Studio 2026) when .NET 8 is absent. -->
+    <RollForward>Major</RollForward>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+</Project>

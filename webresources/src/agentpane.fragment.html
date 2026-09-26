@@ -1,0 +1,358 @@
+<title>Returning Customer Pane</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@87,600;87,700&family=Public+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+  :root {
+    --bg: #f5f7f9; --surface: #ffffff; --surface-2: #eef2f5; --ink: #1b2430; --ink-2: #4a5866; --ink-3: #7a8795; --line: #dde3e9;
+    --verified: #0f6e7a; --verified-soft: #d5ecee; --claimed: #b0661a; --claimed-soft: #f5e4d0; --bad: #b3261e; --bad-soft: #f7dcd9;
+    --focus: #0f6e7a;
+    --display: "Archivo", "Arial Narrow", "Helvetica Neue", Arial, sans-serif;
+    --body: "Public Sans", "Segoe UI", system-ui, -apple-system, sans-serif;
+    --mono: "JetBrains Mono", "Cascadia Mono", Consolas, ui-monospace, monospace;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      color-scheme: dark;
+      --bg: #10151b; --surface: #171f28; --surface-2: #1f2933; --ink: #e6ebf0; --ink-2: #b3bfcb; --ink-3: #8593a1; --line: #2a3643;
+      --verified: #4cc0cc; --verified-soft: #16393e; --claimed: #e3a15a; --claimed-soft: #3d2c19; --bad: #ef7a70; --bad-soft: #43201d; --focus: #4cc0cc;
+    }
+  }
+  :root[data-theme="dark"] {
+    color-scheme: dark;
+    --bg: #10151b; --surface: #171f28; --surface-2: #1f2933; --ink: #e6ebf0; --ink-2: #b3bfcb; --ink-3: #8593a1; --line: #2a3643;
+    --verified: #4cc0cc; --verified-soft: #16393e; --claimed: #e3a15a; --claimed-soft: #3d2c19; --bad: #ef7a70; --bad-soft: #43201d; --focus: #4cc0cc;
+  }
+  * { box-sizing: border-box; }
+  [hidden] { display: none !important; }
+  body { background: var(--bg); color: var(--ink); font: 13.5px/1.5 var(--body); margin: 0; }
+  .pane { max-width: 440px; margin: 0 auto; padding-inline: 16px; padding-block: 16px 32px; display: grid; gap: 14px; }
+  h1 { font: 700 18px/1.2 var(--display); font-stretch: 87%; margin: 0; }
+  .eyebrow { font: 500 10.5px/1.2 var(--mono); letter-spacing: .08em; text-transform: uppercase; color: var(--ink-3); }
+  .muted { color: var(--ink-2); } .small { font-size: 12px; }
+  .lookup { display: grid; gap: 6px; }
+  .lookup-row { display: flex; gap: 8px; }
+  input, select, button { font: 500 13px var(--body); color: var(--ink); background: var(--surface); border: 1px solid var(--line); border-radius: 8px; padding: 7px 10px; min-width: 0; }
+  input, select { flex: 1; }
+  button { cursor: pointer; background: var(--ink); color: var(--bg); border-color: var(--ink); }
+  button:focus-visible, input:focus-visible, select:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
+
+  .alert { border-radius: 10px; padding: 14px; display: grid; gap: 6px; border: 1px solid; }
+  .alert.repeat { background: var(--bad-soft); border-color: color-mix(in srgb, var(--bad) 35%, transparent); }
+  .alert.clear { background: var(--verified-soft); border-color: color-mix(in srgb, var(--verified) 35%, transparent); }
+  .alert .head { font: 700 16px/1.25 var(--display); font-stretch: 87%; }
+  .alert.repeat .head { color: var(--bad); } .alert.clear .head { color: var(--verified); }
+  .tips { margin: 0; padding-left: 18px; display: grid; gap: 4px; }
+
+  .timeline { list-style: none; margin: 0; padding: 0; display: grid; gap: 0; }
+  .timeline li { display: grid; grid-template-columns: 14px 1fr; gap: 10px; }
+  .rail { position: relative; }
+  .rail::before { content: ""; position: absolute; left: 6px; top: 16px; bottom: -4px; width: 2px; background: var(--line); }
+  .timeline li:last-child .rail::before { display: none; }
+  .dot { position: absolute; left: 1px; top: 5px; width: 12px; height: 12px; border-radius: 50%; border: 2px solid var(--surface); background: var(--ink-3); }
+  .dot.FalseContainment, .dot.FailedHumanResolution { background: var(--bad); }
+  .dot.VerifiedResolved { background: var(--verified); }
+  .dot.Pending { background: var(--claimed); }
+  .item { background: var(--surface); border: 1px solid var(--line); border-radius: 8px; padding: 10px 12px; margin-bottom: 10px; display: grid; gap: 4px; }
+  .item .meta { display: flex; flex-wrap: wrap; gap: 6px 10px; align-items: center; font: 12px var(--mono); color: var(--ink-2); }
+  .pill { display: inline-block; font: 500 11px var(--mono); padding: 1px 7px; border-radius: 999px; background: var(--surface-2); color: var(--ink-2); }
+  .pill.bad { background: var(--bad-soft); color: var(--bad); } .pill.good { background: var(--verified-soft); color: var(--verified); } .pill.warn { background: var(--claimed-soft); color: var(--claimed); }
+  .item .what { font-weight: 600; }
+  .empty { color: var(--ink-2); padding: 12px 0; }
+  .error { background: var(--bad-soft); color: var(--bad); border-radius: 8px; padding: 10px 12px; }
+  .status { color: var(--ink-2); background: var(--surface); border: 1px dashed var(--line); border-radius: 8px; padding: 10px 12px; }
+  .issues { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
+  .issue { background: var(--surface); border: 1px solid var(--line); border-left: 4px solid var(--ink-3); border-radius: 8px; padding: 10px 12px; display: grid; gap: 4px; }
+  .issue.bad { border-left-color: var(--bad); } .issue.warn { border-left-color: var(--claimed); }
+  .issue .ref { font: 600 13px var(--mono); overflow-wrap: anywhere; }
+  .issue .path { font-weight: 600; }
+  details.why { font-size: 12px; color: var(--ink-2); }
+  details.why summary { cursor: pointer; color: var(--focus); width: fit-content; }
+  details.why ul { margin: 4px 0 0; padding-left: 18px; }
+  .foot { font: 11px var(--mono); color: var(--ink-3); }
+</style>
+
+<main class="pane">
+  <div>
+    <span class="eyebrow">Verified Resolution Ledger</span>
+    <h1>Customer history</h1>
+  </div>
+
+  <div class="lookup" id="lookup">
+    <label class="small muted" for="who" id="who-label">Customer</label>
+    <div class="lookup-row" id="demo-row" hidden>
+      <select id="who"></select>
+    </div>
+    <form class="lookup-row" id="manual" hidden>
+      <input id="query" placeholder="Phone, e-mail or contact ID" autocomplete="off">
+      <button type="submit">Look up</button>
+    </form>
+  </div>
+
+  <div id="error" class="error" hidden></div>
+  <div id="status" class="status small" hidden aria-live="polite"></div>
+  <section id="alert" class="alert" hidden aria-live="polite"></section>
+  <section id="issues-wrap" hidden>
+    <span class="eyebrow">Unresolved issues</span>
+    <ul class="issues" id="issues"></ul>
+  </section>
+  <section>
+    <span class="eyebrow" id="tl-title">Recent contacts</span>
+    <ol class="timeline" id="timeline"></ol>
+  </section>
+  <p class="foot" id="foot" hidden></p>
+</main>
+
+<script>
+(() => {
+  "use strict";
+  const ENUMS = {
+    channel: { 100000000: "Unknown", 100000001: "Chat", 100000002: "Voice", 100000003: "SMS", 100000004: "Email", 100000005: "Social", 100000006: "Case" },
+    mode: { 100000000: "Unknown", 100000001: "BotOnly", 100000002: "BotThenHuman", 100000003: "HumanOnly", 100000004: "CaseOnly" },
+    verdict: { 100000000: "Pending", 100000001: "VerifiedResolved", 100000002: "FalseContainment", 100000003: "FailedHumanResolution", 100000004: "PlannedFollowUp", 100000005: "Unknown" },
+  };
+  const MODE = { BotOnly: "AI agent", BotThenHuman: "AI agent → representative", HumanOnly: "Representative", CaseOnly: "Case", Unknown: "Unknown" };
+  const VERDICT = { VerifiedResolved: ["Resolved", "good"], FalseContainment: ["Came back", "bad"], FailedHumanResolution: ["Came back", "bad"], PlannedFollowUp: ["Planned follow-up", ""], Pending: ["Window open", "warn"], Unknown: ["Unverified", ""] };
+  const WINDOW_H = 72;
+  const $ = (id) => document.getElementById(id);
+  const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+  const map = (m, v) => (typeof v === "number" ? m[v] : v) ?? "Unknown";
+
+  // ---- customer key: identical to Vrl.Core CustomerIdentity.ResolveKey ----
+  async function sha(v) {
+    const buf = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(v));
+    return [...new Uint8Array(buf)].slice(0, 16).map((b) => b.toString(16).padStart(2, "0")).join("");
+  }
+  function normPhone(p) {
+    let out = "";
+    for (const ch of String(p || "").trim()) { if (/\d/.test(ch)) out += ch; else if (ch === "+" && out.length === 0) out += ch; }
+    if (out.length && out[0] !== "+" && out.startsWith("00")) out = "+" + out.slice(2);
+    return out.replace(/^\+/, "").length >= 7 ? out : null;
+  }
+  async function keyFor(q) {
+    q = String(q || "").trim();
+    const guid = q.replace(/[{}]/g, "").match(/^[0-9a-f]{8}-?[0-9a-f]{4}-?[0-9a-f]{4}-?[0-9a-f]{4}-?[0-9a-f]{12}$/i);
+    if (guid) return "contact:" + guid[0].replace(/-/g, "").toLowerCase();
+    if (q.includes("@")) return "email:" + await sha(q.toLowerCase());
+    const p = normPhone(q);
+    return p ? "phone:" + await sha(p) : null;
+  }
+
+  const GUID = /^[{]?([0-9a-f]{8}-?[0-9a-f]{4}-?[0-9a-f]{4}-?[0-9a-f]{4}-?[0-9a-f]{12})[}]?$/i;
+  const guidOf = (v) => { const m = String(v || "").trim().match(GUID); return m ? m[1].toLowerCase() : null; };
+
+  /**
+   * Host context. As a session tab (application tab template, type Web resource) the data parameter is
+   * "contactid={customerRecordId}&conv={LiveWorkItemId}". Slugs the host cannot resolve arrive empty or literally
+   * ("{customerRecordId}"), so both are validated. Also accepts phone/email, or a contact form's id/typename.
+   */
+  function contextFromHost() {
+    const params = new URLSearchParams(location.search);
+    const out = { contact: null, conv: null, query: null };
+    const data = params.get("data");
+    if (data) {
+      const d = new URLSearchParams(data);
+      out.contact = guidOf(d.get("contactid"));
+      out.conv = guidOf(d.get("conv") || d.get("liveworkitemid"));
+      out.query = d.get("phone") || d.get("email") || (!data.includes("=") ? data : null);
+    }
+    if (!out.contact && params.get("typename") === "contact") out.contact = guidOf(params.get("id"));
+    return out;
+  }
+
+  let base = location.origin;
+  try { const x = window.Xrm || window.parent.Xrm; if (x && x.Utility) base = x.Utility.getGlobalContext().getClientUrl(); } catch (_) { /* cross-origin parent: keep origin */ }
+
+  async function api(path) {
+    const res = await fetch(`${base}/api/data/v9.2/${path}`, {
+      headers: { Accept: "application/json", "OData-Version": "4.0", Prefer: 'odata.include-annotations="*"' },
+      credentials: "same-origin",
+    });
+    if (res.status === 401 || res.status === 403) throw new Error('No access to the ledger. Ask your admin for the "VRL Ledger Reader" role.');
+    if (!res.ok) throw new Error(`Could not read Dataverse (HTTP ${res.status}).`);
+    return res.json();
+  }
+
+  /** The conversation's linked customer, once the representative (or pre-chat identification) has linked one. */
+  async function customerOfConversation(conv) {
+    const r = await api(`msdyn_ocliveworkitems(${conv})?$select=_msdyn_customer_value`);
+    const id = r._msdyn_customer_value;
+    const type = r["_msdyn_customer_value@Microsoft.Dynamics.CRM.lookuplogicalname"];
+    return id && type === "contact" ? id.toLowerCase() : null;
+  }
+
+  async function fetchRows(key) {
+    const since = new Date(Date.now() - 14 * 864e5).toISOString();
+    const sel = "bpc_interactionid,bpc_startedon,bpc_endedon,bpc_channel,bpc_handlingmode,bpc_intentcode,bpc_bottopic,bpc_queuename,bpc_verdict,bpc_verdictreason,bpc_episodekey,bpc_summary,_bpc_successorid_value";
+    const v = await api(`bpc_interactions?$select=${sel}&$filter=bpc_customerkey eq '${key.replace(/'/g, "''")}' and bpc_startedon ge ${since}&$orderby=bpc_startedon desc&$top=50`);
+    return v.value.map((r) => {
+      let reason = null;
+      try { reason = r.bpc_verdictreason ? JSON.parse(r.bpc_verdictreason) : null; } catch (_) { /* older rows */ }
+      return {
+        id: r.bpc_interactionid, startedOn: new Date(r.bpc_startedon), endedOn: new Date(r.bpc_endedon),
+        channel: map(ENUMS.channel, r.bpc_channel), mode: map(ENUMS.mode, r.bpc_handlingmode), intent: r.bpc_intentcode,
+        topic: r.bpc_bottopic, queue: r.bpc_queuename, verdict: map(ENUMS.verdict, r.bpc_verdict ?? 100000000),
+        episode: r.bpc_episodekey, summary: r.bpc_summary, successor: r._bpc_successorid_value, reason,
+      };
+    });
+  }
+
+  // Same structured-reference pattern as Vrl.Core ReferenceExtractor, with typographic dashes folded to ASCII.
+  const REF = /\b[A-Z]{2,5}[-#\s]?\d{4,}(?:-[A-Za-z0-9]{2,})*\b/g;
+  const refsOf = (t) => [...new Set((String(t || "").replace(/[‐-―−﹘﹣－]/g, "-").match(REF) || [])
+    .map((x) => x.replace(/[\s#]/g, "-")))];
+  const ago = (ms) => { const m = Math.max(0, Math.round(ms / 6e4)); return m < 60 ? `${m} min` : m < 2880 ? `${Math.round(m / 60)} h` : `${Math.round(m / 1440)} days`; };
+
+  /** Groups prior contacts into issues (ledger episodes) and keeps those not verified as resolved. */
+  function unresolvedIssues(prior, now) {
+    const byEp = new Map();
+    for (const r of prior) { const k = r.episode || r.id; (byEp.get(k) || byEp.set(k, []).get(k)).push(r); }
+    return [...byEp.values()].map((rs) => rs.slice().sort((a, b) => a.startedOn - b.startedOn)).map((rs) => {
+      const last = rs[rs.length - 1];
+      return {
+        rs, last,
+        refs: [...new Set(rs.flatMap((r) => refsOf(r.summary)))],
+        botClaimed: rs.some((r) => r.verdict === "FalseContainment"),
+        humanFailed: rs.some((r) => r.verdict === "FailedHumanResolution"),
+        since: now - rs[0].startedOn,
+      };
+    }).filter((i) => i.last.verdict !== "VerifiedResolved" && i.last.verdict !== "Unknown")
+      .sort((a, b) => (Number(b.botClaimed || b.humanFailed) - Number(a.botClaimed || a.humanFailed)) || (b.last.startedOn - a.last.startedOn));
+  }
+
+  function whyLinked(r) {
+    const sig = r.reason && Array.isArray(r.reason.linkSignals) ? r.reason.linkSignals : [];
+    if (!r.reason || !sig.length) return "";
+    return `<details class="why"><summary>Why the ledger says this</summary>
+      <div>${esc(r.reason.message || "")}</div>
+      <ul>${sig.map((x) => `<li>${esc(x.detail || x.signal)} <span class="muted">(+${Number(x.contribution).toFixed(2)})</span></li>`).join("")}</ul>
+    </details>`;
+  }
+
+  function render(prior, now, incomingIntent) {
+    const recent = prior.filter((r) => (now - r.endedOn) / 36e5 <= WINDOW_H);
+    const issues = unresolvedIssues(prior, now);
+    const alert = $("alert");
+    alert.hidden = false;
+    if (recent.length) {
+      const first = recent[recent.length - 1];
+      const bot = recent.find((r) => r.mode === "BotOnly" || r.mode === "BotThenHuman");
+      const lastHuman = recent.find((r) => r.mode !== "BotOnly");
+      const cameBack = issues.filter((i) => i.botClaimed || i.humanFailed).length;
+      alert.className = "alert repeat";
+      alert.innerHTML = `
+        <span class="head">Contact #${recent.length + 1} in ${ago(now - first.endedOn)}${incomingIntent ? " about " + esc(incomingIntent) : ""}</span>
+        <span class="small">In touch ${recent.length === 1 ? "once" : recent.length + " times"} in the last ${WINDOW_H} hours${cameBack ? `; ${cameBack === 1 ? "one issue has" : cameBack + " issues have"} already come back after being handled` : ""}.</span>
+        <ul class="tips small">
+          <li>Acknowledge the earlier ${recent.length === 1 ? "contact" : "contacts"}; don't ask the customer to repeat the story.</li>
+          ${bot ? `<li>They already tried the AI agent${bot.topic ? ` (topic <b>${esc(bot.topic)}</b>)` : ""}. Skip the steps it covers.</li>` : ""}
+          ${lastHuman && lastHuman.queue ? `<li>Last representative contact: ${esc(lastHuman.queue)}. Check its notes before answering.</li>` : ""}
+          <li>Close it on this contact, or schedule a follow-up so it isn't counted as a repeat.</li>
+        </ul>`;
+    } else {
+      alert.className = "alert clear";
+      alert.innerHTML = `<span class="head">No recent contacts</span><span class="small">Nothing from this customer in the last ${WINDOW_H} hours.</span>`;
+    }
+
+    $("issues-wrap").hidden = !issues.length;
+    $("issues").innerHTML = issues.map((i) => {
+      const path = i.botClaimed ? "AI agent said resolved, customer came back"
+        : i.humanFailed ? "Representative handled it, customer came back"
+        : `${MODE[i.last.mode] || i.last.mode}, verdict pending`;
+      const title = i.refs.length ? i.refs.join(", ") : (i.last.intent || i.last.topic || "Issue without a reference");
+      return `<li class="issue ${i.botClaimed || i.humanFailed ? "bad" : "warn"}">
+        <span class="ref">${esc(title)}</span>
+        <span class="path small">${esc(path)}</span>
+        <span class="small muted">${i.rs.length} contact${i.rs.length === 1 ? "" : "s"} · first ${ago(i.since)} ago · last via ${esc(i.last.channel)}</span>
+      </li>`;
+    }).join("");
+
+    const dt = new Intl.DateTimeFormat(undefined, { weekday: "short", day: "numeric", month: "short", hour: "2-digit", minute: "2-digit" });
+    $("timeline").innerHTML = prior.length ? prior.map((r) => {
+      const [label, cls] = VERDICT[r.verdict] || [r.verdict, ""];
+      const text = String(r.summary || r.intent || "");
+      return `<li><div class="rail"><span class="dot ${esc(r.verdict)}"></span></div>
+        <div class="item">
+          <div class="meta"><span>${dt.format(r.startedOn)}</span><span>${esc(r.channel)}</span><span class="pill ${cls}">${esc(label)}</span></div>
+          <div class="what">${esc(MODE[r.mode] || r.mode)}${r.topic ? " · " + esc(r.topic) : r.queue ? " · " + esc(r.queue) : ""}</div>
+          <div class="muted small">${esc(text.length > 220 ? text.slice(0, 220) + "…" : text)}</div>
+          ${whyLinked(r)}
+        </div></li>`;
+    }).join("") : `<li class="empty">No contacts in the last 14 days.</li>`;
+  }
+
+  function showError(msg) { $("error").hidden = false; $("error").textContent = msg; }
+
+  async function lookupLive(q) {
+    $("error").hidden = true;
+    const key = await keyFor(q);
+    if (!key) { showError("Enter a phone number (7+ digits), an e-mail address or a contact ID."); return; }
+    try { render(await fetchRows(key), new Date(), null); } catch (e) { showError(e.message); }
+  }
+
+  // ---- demo mode: replay the moment a repeat contact arrives ----
+  function startDemo(demo) {
+    const rows = demo.rows.map((r) => ({ ...r, startedOn: new Date(r.startedOn), endedOn: new Date(r.endedOn) }));
+    const episodes = new Map();
+    for (const r of rows) { if (!r.customer) continue; (episodes.get(r.episode) || episodes.set(r.episode, []).get(r.episode)).push(r); }
+    const cases = [...episodes.values()].filter((e) => e.length >= 2 && e.some((r) => r.mode === "BotOnly"))
+      .map((e) => e.sort((a, b) => a.startedOn - b.startedOn)).slice(-12).reverse();
+    $("demo-row").hidden = false;
+    $("who-label").textContent = "Example incoming contacts (synthetic)";
+    $("who").innerHTML = cases.map((e, i) => {
+      const inc = e[e.length - 1];
+      return `<option value="${i}">${inc.channel} \u00b7 ${esc(inc.intent || "no intent")} \u00b7 contact #${e.length}</option>`;
+    }).join("");
+    const show = (i) => {
+      const e = cases[i]; const incoming = e[e.length - 1];
+      const prior = rows.filter((r) => r.customer === incoming.customer && r.endedOn <= incoming.startedOn && (incoming.startedOn - r.startedOn) <= 14 * 864e5)
+        .sort((a, b) => b.startedOn - a.startedOn);
+      render(prior, incoming.startedOn, incoming.intent);
+    };
+    $("who").addEventListener("change", (ev) => show(+ev.target.value));
+    if (cases.length) show(0);
+  }
+
+  function setStatus(msg) { $("status").hidden = !msg; $("status").textContent = msg || ""; }
+
+  async function showContact(contactId) {
+    setStatus("");
+    $("error").hidden = true;
+    render(await fetchRows("contact:" + contactId.replace(/-/g, "")), new Date(), null);
+    $("foot").hidden = false;
+    $("foot").textContent = `Ledger as of ${new Date().toLocaleTimeString()}. The current conversation is added when it closes.`;
+  }
+
+  /** Session tab: wait until the conversation has a linked contact (polls every 10 s for up to 30 min), then show it. */
+  function followConversation(conv) {
+    const started = Date.now();
+    const schedule = () => {
+      if (Date.now() - started < 30 * 6e4) setTimeout(tick, 10000);
+      else setStatus("No customer linked to this conversation. Use the lookup above.");
+    };
+    const tick = async () => {
+      if (document.hidden) return schedule();
+      try {
+        const contact = await customerOfConversation(conv);
+        if (contact) { $("query").value = contact; await showContact(contact); return; }
+        setStatus("Waiting for the customer to be identified. Link the customer on the conversation and this updates automatically.");
+      } catch (e) { showError(e.message); return; }
+      schedule();
+    };
+    tick();
+  }
+
+  if (window.VRL_DEMO) {
+    startDemo(window.VRL_DEMO);
+  } else {
+    // Hosted in the (light) Copilot Service workspace: don't follow the OS theme.
+    document.documentElement.dataset.theme = "light";
+    $("manual").hidden = false;
+    $("manual").addEventListener("submit", (e) => { e.preventDefault(); lookupLive($("query").value); });
+    const ctx = contextFromHost();
+    if (ctx.contact) { $("query").value = ctx.contact; showContact(ctx.contact).catch((e) => showError(e.message)); }
+    else if (ctx.conv) followConversation(ctx.conv);
+    else if (ctx.query) { $("query").value = ctx.query; lookupLive(ctx.query); }
+  }
+})();
+</script>

@@ -1,0 +1,26 @@
+# Build output
+bin/
+obj/
+out/
+artifacts/
+webresources/dist/
+node_modules/
+*.user
+.vs/
+.vscode/
+.idea/
+
+# Environment-specific: NEVER commit (tenant ids, URLs, resource names, widget ids, run transcripts, deployment state)
+deploy/config*.json
+!deploy/config.example.json
+deploy/logs/
+local.settings.json
+local/
+*.log
+
+# Secrets that must never be in a repository
+*.pfx
+*.pem
+*.publishsettings
+.env
+.env.*

@@ -1,0 +1,20 @@
+{
+  "version": "2.0",
+  "logging": {
+    "applicationInsights": {
+      "samplingSettings": { "isEnabled": true, "excludedTypes": "Request;Exception" },
+      "enableLiveMetricsFilters": true
+    },
+    "logLevel": { "Vrl": "Information", "Microsoft.PowerPlatform": "Warning" }
+  },
+  "extensions": {
+    "serviceBus": {
+      "maxConcurrentSessions": 16,
+      "maxConcurrentCalls": 16,
+      "sessionIdleTimeout": "00:00:05",
+      "autoCompleteMessages": true,
+      "maxAutoLockRenewalDuration": "00:05:00"
+    }
+  },
+  "functionTimeout": "00:10:00"
+}

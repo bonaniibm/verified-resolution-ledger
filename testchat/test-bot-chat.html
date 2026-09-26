@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>VRL Bot Chat Portal</title>
+<style>
+  body { font: 15px/1.55 "Segoe UI", system-ui, sans-serif; margin: 0; background: #f5f7f9; color: #1b2430; }
+  main { max-width: 760px; margin: 0 auto; padding: 32px 20px 120px; display: grid; gap: 18px; }
+  h1 { font-size: 22px; margin: 0; }
+  .card { background: #fff; border: 1px solid #dde3e9; border-radius: 10px; padding: 18px 20px; }
+  code, .say { font-family: Consolas, monospace; background: #eef2f5; padding: 2px 6px; border-radius: 4px; }
+  .say { display: block; padding: 8px 10px; margin: 6px 0 12px; }
+  ol { margin: 6px 0 0 18px; padding: 0; }
+</style>
+</head>
+<body>
+<main>
+  <h1>Bot chat portal: VRL Parcel Bot</h1>
+  <div class="card">
+    <strong>Test C, step 1: the bot "resolves" it</strong>
+    <ol>
+      <li>Open the chat bubble. In the pre-chat survey enter Email: <span class="say">{{TEST_EMAIL}}</span></li>
+      <li>Send: <span class="say">My parcel TRK-55667788 shows delivered but I never received it.</span></li>
+      <li>The bot answers. Send <span class="say">OK thanks</span> and close the chat (end conversation). Do not ask for an agent.</li>
+      <li>Wait about 3 minutes and run <code>Check-Trial.cmd</code>: a new row, linked to Test Customer A, <code>Pending</code>.</li>
+    </ol>
+  </div>
+  <div class="card">
+    <strong>Test C, step 2: the customer comes back</strong>
+    <ol>
+      <li>Run <code>Start-TestChat.cmd</code> (human chat) and send:
+        <span class="say">My parcel TRK-55667788 still hasn't arrived, the bot told me to wait.</span></li>
+      <li>Accept, link <i>Test Customer A</i>, reply, end and close.</li>
+      <li>Wait about 3 minutes, run <code>Check-Trial.cmd</code>: the bot chat should show <code>FalseContainment</code>.</li>
+    </ol>
+  </div>
+</main>
+<script id="Microsoft_Omnichannel_LCWidget" src="https://oc-cdn-ocprod.azureedge.net/livechatwidget/scripts/LiveChatBootstrapper.js" onerror="(function(el){el.parentNode.removeChild(el);var s=document.createElement('script');s.src='https://ocprodocprodnamgs.blob.core.windows.net/livechatwidget/scripts/LiveChatBootstrapper.js';s.setAttribute('id', 'Microsoft_Omnichannel_LCWidget');s.setAttribute('data-app-id', '{{APP_ID}}');s.setAttribute('data-lcw-version', 'prod');s.setAttribute('data-org-id', '{{ORG_ID}}');s.setAttribute('data-org-url', '{{ORG_URL}}');document.body.appendChild(s);})(this);" data-app-id="{{APP_ID}}" data-lcw-version="prod" data-org-id="{{ORG_ID}}" data-org-url="{{ORG_URL}}" async></script>
+</body>
+</html>

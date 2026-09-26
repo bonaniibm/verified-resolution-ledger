@@ -1,0 +1,52 @@
+name: ci
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  build-test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Secret scan
+        uses: gitleaks/gitleaks-action@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 8.0.x
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Build
+        run: dotnet build VerifiedResolutionLedger.sln -c Release
+
+      - name: Test
+        run: dotnet test VerifiedResolutionLedger.sln -c Release --no-build --logger "trx" --results-directory TestResults
+
+      - name: Synthetic benchmark (precision must stay >= 90%)
+        run: |
+          dotnet run --project tools/Vrl.Tools -c Release --no-build -- simulate | tee simulate.txt
+          precision=$(grep "Repeat detection precision" simulate.txt | grep -oE "[0-9]+\.[0-9]+")
+          echo "precision=$precision"
+          awk -v p="$precision" 'BEGIN { exit (p >= 90.0) ? 0 : 1 }'
+
+      - name: Web resources
+        run: node webresources/build.mjs
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: test-results
+          path: TestResults
