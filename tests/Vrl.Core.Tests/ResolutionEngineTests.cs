@@ -150,7 +150,7 @@ public class ResolutionEngineTests
     {
         var items = new[] { Contact(0, Alice, HandlingMode.BotOnly, NativeBotOutcome.Resolved), Contact(5, Alice), Contact(8, Bob) };
         var r1 = Engine.Evaluate(items, Later);
-        var r2 = Engine.Evaluate(items.Reverse(), Later);
+        var r2 = Engine.Evaluate(items.AsEnumerable().Reverse(), Later);
         Assert.Equal(r1.Interactions, r2.Interactions, new EvalComparer());
         Assert.Equal(r1.Episodes.Select(e => e.EpisodeKey), r2.Episodes.Select(e => e.EpisodeKey));
     }
