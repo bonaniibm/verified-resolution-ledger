@@ -19,6 +19,14 @@ public interface ILedgerRepository
         string customerKey, DateTimeOffset since, int maxItems, CancellationToken cancellationToken = default);
 
     /// <summary>
+    /// All interactions of a customer that carry one of <paramref name="episodeKeys"/>. The processor uses this so an
+    /// evaluation always sees complete episodes: otherwise an open contact whose (final) predecessors fall outside
+    /// the history horizon would be re-evaluated alone, losing its link and truncating the stored episode.
+    /// </summary>
+    Task<IReadOnlyList<Interaction>> LoadEpisodeMembersAsync(
+        string customerKey, IReadOnlyCollection<string> episodeKeys, CancellationToken cancellationToken = default);
+
+    /// <summary>
     /// Persists verdicts and episodes for the evaluated scope. Implementations should write only changed rows and
     /// remove episodes (ending on/after <paramref name="since"/>) that no longer exist in <paramref name="result"/>.
     /// </summary>

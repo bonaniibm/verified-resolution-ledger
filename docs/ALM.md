@@ -17,7 +17,7 @@ as a GitHub release asset.
 
 ## Release
 
-1. Merge to `main`. CI builds, tests (52 tests), builds the web resources and scans for secrets.
+1. Merge to `main`. CI builds, tests (53 tests), builds the web resources and scans for secrets.
 2. In the reference development environment: `Deploy.cmd -Steps dataverse,webres` so the environment matches the code.
 3. `Package.cmd <major.minor.build.revision>`:
    - curates the solution to the allow-list, removing (not deleting) anything else;

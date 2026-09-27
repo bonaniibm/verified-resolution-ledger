@@ -112,6 +112,39 @@ public sealed class DataverseLedgerRepository(
         return result.Entities.Select(InteractionMapper.FromEntity).OrderBy(i => i.StartedOn).ToList();
     }
 
+    public async Task<IReadOnlyList<Interaction>> LoadEpisodeMembersAsync(
+        string customerKey, IReadOnlyCollection<string> episodeKeys, CancellationToken ct = default)
+    {
+        if (episodeKeys.Count == 0) return [];
+        var probe = new Entity(I.Table);
+        foreach (var c in InteractionMapper.SourceColumns.Concat(InteractionMapper.StateColumns)) probe[c] = null;
+        await DropUnknownColumnsAsync(probe, ct);
+
+        var members = new List<Interaction>();
+        // Episodes are small; chunk the IN list to stay well inside query limits.
+        foreach (var chunk in episodeKeys.Distinct(StringComparer.Ordinal).Chunk(100))
+        {
+            var query = new QueryExpression(I.Table)
+            {
+                ColumnSet = new ColumnSet([.. probe.Attributes.Keys]),
+                Criteria =
+                {
+                    FilterOperator = LogicalOperator.And,
+                    Conditions =
+                    {
+                        new ConditionExpression(I.CustomerKey, ConditionOperator.Equal, customerKey),
+                        new ConditionExpression("statecode", ConditionOperator.Equal, 0),
+                        new ConditionExpression(I.EpisodeKey, ConditionOperator.In, chunk.Cast<object>().ToArray()),
+                    },
+                },
+                NoLock = true,
+            };
+            var result = await service.RetrieveMultipleAsync(query, ct);
+            members.AddRange(result.Entities.Select(InteractionMapper.FromEntity));
+        }
+        return members;
+    }
+
     public async Task SaveEvaluationAsync(
         string? customerKey, IReadOnlyList<Interaction> scope, EvaluationResult result, DateTimeOffset since,
         CancellationToken ct = default)

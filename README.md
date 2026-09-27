@@ -120,7 +120,7 @@ tools/Vrl.Tools       `vrl` CLI: simulate, provision, package, import-solution, 
 webresources/         Agent pane and supervisor dashboard
 infra/main.bicep      Flex Consumption Functions, Service Bus, Storage, Key Vault, App Insights, managed identity, RBAC
 deploy/               Config-driven deployment, packaging and operations scripts (+ the *.cmd launchers in the root)
-tests/                52 xUnit tests, including real (anonymised) Contact Center and Copilot Studio transcripts
+tests/                53 xUnit tests, including real (anonymised) Contact Center and Copilot Studio transcripts
 ```
 
 ## Status and limits

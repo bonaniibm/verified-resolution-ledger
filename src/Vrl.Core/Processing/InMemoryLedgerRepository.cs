@@ -37,6 +37,18 @@ public sealed class InMemoryLedgerRepository : ILedgerRepository
         return Task.FromResult(list);
     }
 
+    public Task<IReadOnlyList<Interaction>> LoadEpisodeMembersAsync(
+        string customerKey, IReadOnlyCollection<string> episodeKeys, CancellationToken cancellationToken = default)
+    {
+        var keys = episodeKeys.ToHashSet(StringComparer.Ordinal);
+        IReadOnlyList<Interaction> list = _interactions.Values
+            .Where(i => i.Customer.ResolveKey().Key == customerKey)
+            .Select(i => _evaluations.TryGetValue(i.Id, out var e) ? i with { ExistingEpisodeKey = e.EpisodeKey } : i)
+            .Where(i => i.ExistingEpisodeKey is not null && keys.Contains(i.ExistingEpisodeKey))
+            .ToList();
+        return Task.FromResult(list);
+    }
+
     public Task SaveEvaluationAsync(
         string? customerKey, IReadOnlyList<Interaction> scope, EvaluationResult result, DateTimeOffset since,
         CancellationToken cancellationToken = default)

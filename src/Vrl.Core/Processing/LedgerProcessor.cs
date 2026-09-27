@@ -106,6 +106,10 @@ public sealed class LedgerProcessor
                 .Select(i => i with { Customer = CustomerIdentity.FromKnownKey(customerKey, IdentityConfidence.Low, i.Customer.ContactId, i.Customer.AccountId) })
                 .ToList();
         }
+        else
+        {
+            history = await CompleteEpisodesAsync(customerKey, history, ct);
+        }
 
         var engine = new ResolutionEngine(policy, rates, new SameIssueScorer(policy));
         var result = engine.Evaluate(history, asOf);
@@ -116,6 +120,27 @@ public sealed class LedgerProcessor
             history.Count, result.Episodes.Count, customerKey);
 
         return new ProcessingOutcome(Guid.Empty, customerKey, history.Count, result.Interactions.Count, tooBroad);
+    }
+
+    /// <summary>
+    /// Adds the missing members of every episode that has a member in <paramref name="history"/>. The horizon query
+    /// returns open contacts but not their final predecessors once those end before the horizon (late maturation,
+    /// backlog, replay). Evaluating a partial episode would drop the link and store a truncated episode, which
+    /// inflates FCR (a three-contact journey stored as a one-contact resolution).
+    /// </summary>
+    private async Task<IReadOnlyList<Interaction>> CompleteEpisodesAsync(
+        string customerKey, IReadOnlyList<Interaction> history, CancellationToken ct)
+    {
+        var keys = history.Select(i => i.ExistingEpisodeKey).OfType<string>().Distinct(StringComparer.Ordinal).ToList();
+        if (keys.Count == 0) return history;
+
+        var members = await _repository.LoadEpisodeMembersAsync(customerKey, keys, ct);
+        var seen = history.Select(i => i.Id).ToHashSet();
+        var missing = members.Where(m => seen.Add(m.Id)).ToList();
+        if (missing.Count == 0) return history;
+
+        _logger.LogDebug("Completed {Count} episode member(s) outside the history horizon for {CustomerKey}", missing.Count, customerKey);
+        return history.Concat(missing).OrderBy(i => i.StartedOn).ToList();
     }
 
     /// <summary>Timer-driven: finalises verdicts whose repeat windows have closed with no return contact.</summary>

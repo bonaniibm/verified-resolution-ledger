@@ -369,7 +369,7 @@
       native: ratio(nativeDeflected, botConv.length), verified: ratio(verified, botConv.length),
       comp: { verified, fc, silent, unverifiable, other: bot.length - verified - fc - silent - unverifiable, escalated: botConv.length - bot.length },
       repeatRate: ratio(repeats.length, verifiable.length), repeats: repeats.length,
-      fcr: ratio(fcr, closed), closed, resolved,
+      fcr: ratio(fcr, closed), fcrCount: fcr, closed, resolved,
       total, cpc: ratio(total, rows.length), cpro: ratio(closedCost, resolved), repeatCost,
     };
   }
@@ -402,7 +402,7 @@
     $("k-repeat").textContent = k.verifiable.length ? pct(k.repeatRate) : "–";
     $("k-repeat-sub").innerHTML = `<span class="pill ${k.repeatRate > 0.15 ? "bad" : "neutral"}">${k.repeats} repeats</span> of ${k.verifiable.length} decided contacts${k.unverifiable ? ` · ${k.unverifiable} unidentifiable excluded` : ""}`;
     $("k-fcr").textContent = k.closed ? pct(k.fcr) : "–";
-    $("k-fcr-sub").innerHTML = k.closed ? `${k.resolved} resolved of ${k.closed} episodes with a known outcome` : "No episode with a known outcome yet";
+    $("k-fcr-sub").innerHTML = k.closed ? `${k.fcrCount} of ${k.closed} issues resolved on the first contact` : "No episode with a known outcome yet";
     if (k.resolved) {
       $("k-cpro").textContent = money(k.cpro);
       const mult = k.cpc ? k.cpro / k.cpc : 0;

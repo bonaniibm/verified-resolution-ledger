@@ -119,4 +119,34 @@ public class LedgerProcessorTests
             with { IssueText = issue }));
         Assert.Equal(expectedEmbedded, Assert.Single(embeddings.Texts));
     }
+
+    [Fact]
+    public async Task Late_maturation_keeps_the_whole_episode()
+    {
+        // A came back as B (same issue): A's verdict is final, B's window is still open. If maturation runs long after
+        // B's window closed (timer outage, backlog, replay), the history query returns B but not A. The episode must
+        // still be rebuilt with both contacts, and B must keep its predecessor.
+        var a = Contact(0, Alice, intent: "billing.refund");
+        var b = Contact(20, Alice, intent: "billing.refund");
+        var (p, repo, time) = Create(a.EndedOn);
+        await p.IngestAsync(Raw(a));
+        time.Now = b.EndedOn;
+        await p.IngestAsync(Raw(b));
+        var aId = DeterministicGuid.ForInteraction(a.SourceSystem, a.SourceRecordId);
+        var bId = DeterministicGuid.ForInteraction(b.SourceSystem, b.SourceRecordId);
+        Assert.True(repo.Evaluations.Single(e => e.InteractionId == aId).IsFinal);
+        var episodeKey = repo.Evaluations.Single(e => e.InteractionId == aId).EpisodeKey;
+
+        time.Now = b.EndedOn.AddDays(30);
+        Assert.Equal(1, await p.MatureDueVerdictsAsync());
+
+        var episode = repo.Episodes.Single(e => e.EpisodeKey == episodeKey);
+        Assert.Equal(2, episode.ContactCount);
+        Assert.Equal(EpisodeStatus.Resolved, episode.Status);
+        var bEval = repo.Evaluations.Single(e => e.InteractionId == bId);
+        Assert.Equal(aId, bEval.PredecessorId);
+        Assert.Equal(OutcomeVerdict.VerifiedResolved, bEval.Verdict);
+        Assert.True(bEval.IsFinal);
+        Assert.Equal(OutcomeVerdict.FailedHumanResolution, repo.Evaluations.Single(e => e.InteractionId == aId).Verdict);
+    }
 }
