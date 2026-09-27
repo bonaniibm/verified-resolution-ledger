@@ -45,10 +45,11 @@
   .tips { margin: 0; padding-left: 18px; display: grid; gap: 4px; }
 
   .timeline { list-style: none; margin: 0; padding: 0; display: grid; gap: 0; }
-  .timeline li { display: grid; grid-template-columns: 14px 1fr; gap: 10px; }
+  /* Child combinators: nested lists (e.g. the evidence under "Why the ledger says this") must not inherit the rail grid. */
+  .timeline > li { display: grid; grid-template-columns: 14px 1fr; gap: 10px; }
   .rail { position: relative; }
   .rail::before { content: ""; position: absolute; left: 6px; top: 16px; bottom: -4px; width: 2px; background: var(--line); }
-  .timeline li:last-child .rail::before { display: none; }
+  .timeline > li:last-child .rail::before { display: none; }
   .dot { position: absolute; left: 1px; top: 5px; width: 12px; height: 12px; border-radius: 50%; border: 2px solid var(--surface); background: var(--ink-3); }
   .dot.FalseContainment, .dot.FailedHumanResolution { background: var(--bad); }
   .dot.VerifiedResolved { background: var(--verified); }
@@ -69,6 +70,7 @@
   details.why { font-size: 12px; color: var(--ink-2); }
   details.why summary { cursor: pointer; color: var(--focus); width: fit-content; }
   details.why ul { margin: 4px 0 0; padding-left: 18px; }
+  details.why li { margin: 2px 0; overflow-wrap: anywhere; }
   .foot { font: 11px var(--mono); color: var(--ink-3); }
 </style>
 

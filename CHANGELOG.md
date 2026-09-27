@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.0.2
+
+- **Fix: agent pane evidence was unreadable.** Expanding *Why the ledger says this* squeezed each signal into a
+  14-pixel column with its score drawn on top, because the timeline's layout rule (`.timeline li`) also applied to the
+  evidence list nested inside each contact. The rule now targets only the timeline's own items.
+
 ## 1.0.1
 
 - **Fix: stored episodes could be truncated.** When a customer was re-evaluated after an open contact's final
